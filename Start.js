@@ -1,6 +1,5 @@
-const express=require('express') //imported express from package json
+const express=require('express')
 const app=express()
-
 app.use(express.json())
 const users=[]
 app.get('/get',(req,res)=>{
