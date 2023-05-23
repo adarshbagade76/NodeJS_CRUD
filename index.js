@@ -1,15 +1,39 @@
 const express=require('express') //imported express from package json
-const app=express()
+const app=express();
+const mongoose = require('mongoose');
 
 app.use(express.json())
-const users=[]
-app.get('/get',(req,res)=>{
+
+mongoose.connect('mongodb://127.0.0.1:27017/crud', {
+    useNewUrlParser: true,
+    // useFindAndModify: false,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log("DB connected")
+}).catch((e) => {
+    console.log(e)
+});
+
+const UserSchema = new mongoose.Schema({
+    name: String,
+    company: String,
+    password: String,
+    PhoneNumber: Number
+
+})
+
+const User = mongoose.model('User', UserSchema)
+
+app.get('/get',async(req,res)=>{
+const users = await User.find({});
 res.send(users)
 })
-app.post('/create',(req,res)=>{
-    const user=req.body
-    users.push(user)
-res.send(user)
+
+
+app.post('/create',async(req,res)=>{
+    const user=new User(req.body)
+    await user.save();
+   res.send(user)
 
 })
 
